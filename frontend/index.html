@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Files Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="mb-4">Telegram Uploaded Files</h1>
+  <div id="filesContainer" class="row"></div>
+</div>
+
+<script>
+async function fetchFiles() {
+  try {
+    const res = await fetch("/files", { cache: "no-store" });
+    const files = await res.json();
+    const container = document.getElementById("filesContainer");
+    container.innerHTML = "";
+
+    files.forEach(file => {
+      const fileCard = document.createElement("div");
+      fileCard.className = "col-md-4 mb-3";
+      fileCard.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${file.fileName}</h5>
+            <p class="card-text">Uploaded at: ${new Date(file.createdAt).toLocaleString()}</p>
+            <a href="${file.path}" target="_blank" class="btn btn-primary">Download / Preview</a>
+          </div>
+        </div>
+      `;
+      container.appendChild(fileCard);
+    });
+  } catch (err) {
+    console.error("Error fetching files:", err);
+  }
+}
+
+// Initial fetch and refresh every 5 seconds
+fetchFiles();
+setInterval(fetchFiles, 2000);
+</script>
+</body>
+</html>
