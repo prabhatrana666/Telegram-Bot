@@ -14,7 +14,7 @@ app.use("/", express.static(path.join(__dirname, "frontend")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Webhook GET (for testing)
-app.get("/webhook", (req, res) => res.send("Webhook GET OK"));
+app.post("/webhook", webhook);
 
 // Webhook POST (Telegram will send updates here)
 app.post("/webhook", async (req, res) => {
